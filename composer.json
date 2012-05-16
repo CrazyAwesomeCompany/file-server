@@ -1,0 +1,18 @@
+{
+    "name": "cac/fileserver",
+    "description": "Crazy Awesome File Server",
+    "autoload": {
+        "psr-0": {
+            "CAC": "src/"
+        }
+    },
+    "require": {
+        "silex/silex": "1.0.x-dev"
+    },
+    "authors": [
+        {
+            "name": "Nick de Groot",
+            "email": "nick@crazyawesomecompany.com"
+        }
+    ]
+}

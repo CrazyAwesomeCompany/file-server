@@ -1,0 +1,14 @@
+# Exclude Eclipse project files
+.settings
+.buildpath
+.project
+
+# Composer files
+composer.lock
+composer.phar
+
+# vendors
+vendor
+
+# additional files
+tmp
