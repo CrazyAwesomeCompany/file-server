@@ -3,7 +3,7 @@
 namespace CAC\Component\Image;
 
 
-class ImageException
+class ImageException extends \Exception
 {
 
 }

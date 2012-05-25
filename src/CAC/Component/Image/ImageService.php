@@ -97,8 +97,6 @@ class ImageService
             );
         }
 
-
-
         switch ($resizeType) {
             case 'resize':
                 // Resize with aspect ratio
@@ -119,7 +117,9 @@ class ImageService
         }
 
         // Store the image
-        $file = $this->fileHandler->store($image, $resizedFilename);
+        $this->fileHandler->store($image, $resizedFilename);
+
+        return $this->fileHandler->fetch($resizedFilename);
     }
 
     /**
