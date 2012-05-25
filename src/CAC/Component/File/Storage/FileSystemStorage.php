@@ -72,7 +72,7 @@ class FileSystemStorage implements FileStorageInterface
 
     /**
      * (non-PHPdoc)
-     * @see \Liveat\Component\Image\Storage\ImageStorageInterface::fetch()
+     * @see \CAC\Component\File\Storage\FileStorageInterface::fetch()
      */
     public function fetch($name)
     {
@@ -80,7 +80,17 @@ class FileSystemStorage implements FileStorageInterface
 
         $filename = $this->storageDirectory . DIRECTORY_SEPARATOR . $name;
 
-        return new File($filename);
+        $file = null;
+
+        try {
+            $file = new File($filename);
+        } catch (\Exception $e) {
+            // Log the error
+            error_log($e->getMessage());
+            // Just let the method return the NULL file
+        }
+
+        return $file;
     }
 
     /**
@@ -89,6 +99,7 @@ class FileSystemStorage implements FileStorageInterface
      */
     public function remove()
     {
+        //@TODO
 
     }
 

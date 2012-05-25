@@ -16,6 +16,13 @@ interface FileStorageInterface
      */
     public function store($data, $name);
 
+    /**
+     * Fetch an image file from the storage
+     *
+     * @param string $name The filename to fetch
+     *
+     * @return \Symfony\Component\HttpFoundation\File\File The file or NULL when file not found
+     */
     public function fetch($name);
 
     public function remove();

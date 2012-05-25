@@ -16,7 +16,16 @@ $app->before(function(Request $request) use ($app) {
         $storage = new \CAC\Component\File\Storage\FileSystemStorage(__DIR__ . '/../tmp');
         $fileHandler = new \CAC\Component\File\FileHandler($storage);
 
-        $file = $fileHandler->fetch($requestFile);
+        $imageProcessor = new \CAC\Component\Image\Processor\GDProcessor();
+
+        $imageService = new \CAC\Component\Image\ImageService($imageProcessor, $fileHandler);
+
+
+        // Request params
+        $width = $request->get('w');
+        $height = $request->get('h');
+
+        $file = $imageService->fetch($requestFile, $width, $height);
 
         header(sprintf('Content-type: %s', $file->getMimeType()));
         echo $file->openFile('r')->fpassthru();
