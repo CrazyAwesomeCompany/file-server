@@ -161,7 +161,7 @@ class ImageService
         $ext = substr($filename, $posExt + 1);
 
         // Build the resized file name
-        $resizedFilename = $name . '_' . $width . 'x' . $height . '-' . $resizeType;
+        $resizedFilename = $dir . \DIRECTORY_SEPARATOR . $name . '_' . $width . 'x' . $height . '-' . $resizeType;
         $resizedFilename .= '.' . $ext;
 
         return $resizedFilename;

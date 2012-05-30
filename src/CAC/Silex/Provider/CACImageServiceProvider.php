@@ -71,8 +71,9 @@ class CACImageServiceProvider implements ServiceProviderInterface
             $file = $imageService->fetch($requestFile, $width, $height);
 
             if (!$file) {
-                header("Status: 404 Not Found");
-                exit;
+                return; // for now just return
+                //header("Status: 404 Not Found");
+                //exit;
             }
 
             header(sprintf('Content-type: %s', $file->getMimeType()));
