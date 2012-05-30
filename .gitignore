@@ -11,4 +11,4 @@ composer.phar
 vendor
 
 # additional files
-tmp\
+tmp

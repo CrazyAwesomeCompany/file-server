@@ -29,7 +29,19 @@ class CACImageServiceProvider implements ServiceProviderInterface
                 throw new \Exception("The ImageServiceProvider needs the FileHandler service provider");
             }
 
-            $service = new ImageService(new GDProcessor(), $app['cac.files']->get());
+            switch ($app['cac.images.processor']) {
+                case 'gd':
+                    $processor = new GDProcessor();
+
+                    break;
+
+                default:
+                    throw new \Exception(sprintf("Image processor %s not supported", $app['cac.images.processor']));
+
+                    break;
+            }
+
+            $service = new ImageService($processor, $app['cac.files']->get($app['cac.images.files.resized']), $app['cac.files']->get($app['cac.images.files.origin']));
 
             return $service;
         });
