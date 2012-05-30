@@ -27,7 +27,13 @@ class ImageService
      */
     private $processor;
 
-
+    /**
+     * Create the image service
+     *
+     * @param \CAC\Component\Image\Processor\ImageProcessorInterface $processor         Image processor
+     * @param \CAC\Component\File\FileHandler                        $fileHandler       File handler images
+     * @param \CAC\Component\File\FileHandler                        $fileHandlerOrigin File handler origin images
+     */
     public function __construct($processor, $fileHandler, $fileHandlerOrigin = null)
     {
         $this->processor = $processor;
@@ -35,6 +41,19 @@ class ImageService
         if ($fileHandlerOrigin) {
             $this->fileHandlerOrigin = $fileHandlerOrigin;
         }
+    }
+
+    /**
+     * Store an image
+     *
+     * @param string $data The image data
+     * @param string $name The image filename
+     *
+     * @return void
+     */
+    public function store($data, $name)
+    {
+        return $this->fileHandlerOrigin->store($data, $name);
     }
 
     /**

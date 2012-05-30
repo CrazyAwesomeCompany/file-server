@@ -41,7 +41,11 @@ class CACImageServiceProvider implements ServiceProviderInterface
                     break;
             }
 
-            $service = new ImageService($processor, $app['cac.files']->get($app['cac.images.files.resized']), $app['cac.files']->get($app['cac.images.files.origin']));
+            $service = new ImageService(
+                $processor,
+                $app['cac.files']->get($app['cac.images.files.resized']),
+                $app['cac.files']->get($app['cac.images.files.origin'])
+            );
 
             return $service;
         });

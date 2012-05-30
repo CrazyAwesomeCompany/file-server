@@ -40,5 +40,12 @@ $app->get('/', function() use ($app) {
     return 'IMG API!';
 });
 
+$app->post('/upload', function(Request $request) use ($app) {
+    // Let's upload an image
+    $imageName = $request->get('name');
+    $imageData = $request->get('data');
+
+    $app['cac.images']->store($imageData, $imageName);
+});
 
 $app->run();
