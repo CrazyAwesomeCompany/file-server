@@ -39,6 +39,9 @@ $app['debug'] = $config['debug'];
 $app->register(new \CAC\Silex\Provider\CACFileHandlerServiceProvider(), $config['files']);
 $app->register(new \CAC\Silex\Provider\CACImageServiceProvider(), $config['images']);
 
+// Upload controllers
+$app->mount('/', new \CAC\Silex\CACImageController());
+
 
 $app->get('/', function() use ($app) {
     return 'IMG API!';
@@ -49,14 +52,6 @@ $app->get('/test', function() use ($app) {
     $imagename = 'user/1/profile/profileimage.jpg';
 
     $app['cac.images']->store($imagedata, $imagename);
-});
-
-$app->post('/upload', function(Request $request) use ($app) {
-    // Let's upload an image
-    $imageName = $request->get('name');
-    $imageData = $request->get('data');
-
-    $app['cac.images']->store(base64_decode($imageData), $imageName);
 });
 
 $app->run();

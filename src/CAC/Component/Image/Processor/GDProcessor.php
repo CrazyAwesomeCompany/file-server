@@ -2,18 +2,70 @@
 
 namespace CAC\Component\Image\Processor;
 
-
 use Symfony\Component\HttpFoundation\File\File;
 
+/**
+ * GD Library Image Processor
+ *
+ * Process images using the GD library.
+ *
+ * @author Nick de Groot <nick@crazyawesomecompany.com>
+ */
 class GDProcessor implements ImageProcessorInterface
 {
 
-    public function crop()
+    /**
+     * (non-PHPdoc)
+     * @see CAC\Component\Image\Processor.ImageProcessorInterface::crop()
+     */
+    public function crop($image, $width, $height)
     {
+        $image = $this->getImage($image);
 
+        $imageX = imagesx($image);
+        $imageY = imagesy($image);
 
+        // Calculate the resize factors
+        $factX = $width / $imageX;
+        $factY = $height / $imageY;
+
+        $posX = $posY = 0;
+
+        if ($factX < $factY) {
+            // downsize the width and crop the height
+            $posY = round((($imageY / $factX) - $height) / 2);
+        } else {
+            // downsize the height and crop the width
+            $posX = round((($imageX / $factY) - $width) / 2);
+        }
+
+        $newImage = $this->createAlphaImage($width, $height);
+        $result = imagecopyresampled(
+            $newImage,
+            $image,
+            0,
+            0,
+            $posX,
+            $posY,
+            $width,
+            $height,
+            ($imageX - (2 * $posX)),
+            ($imageY - (2 * $posY))
+        );
+
+        if ($result) {
+            // Grab the image resource
+            ob_start();
+            imagepng($newImage);
+            imagedestroy($newImage);
+            $data = ob_get_contents();
+            ob_end_clean();
+
+            return $data;
+        }
+
+        return false;
     }
-
 
     /**
      * (non-PHPdoc)
@@ -25,7 +77,7 @@ class GDProcessor implements ImageProcessorInterface
 
         if ($keepAspect) {
             // Calculate the resize factors
-            $factX = $width  / imagesx($image);
+            $factX = $width / imagesx($image);
             $factY = $height / imagesy($image);
             // We need the smallest factor
             $factor = ($factY < $factX) ? $factY : $factX;
@@ -88,7 +140,6 @@ class GDProcessor implements ImageProcessorInterface
 
         return $image;
     }
-
 
     /**
      * Get the image resource from the given image

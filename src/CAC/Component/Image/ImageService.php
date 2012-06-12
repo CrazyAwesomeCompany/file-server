@@ -27,19 +27,30 @@ class ImageService
      */
     private $processor;
 
+    private $config = array(
+        'maxWidth' => 0,
+        'maxHeight' => 0
+    );
+
     /**
      * Create the image service
      *
      * @param \CAC\Component\Image\Processor\ImageProcessorInterface $processor         Image processor
      * @param \CAC\Component\File\FileHandler                        $fileHandler       File handler images
      * @param \CAC\Component\File\FileHandler                        $fileHandlerOrigin File handler origin images
+     * @param array                                                  $config            The config parameters
      */
-    public function __construct($processor, $fileHandler, $fileHandlerOrigin = null)
+    public function __construct($processor, $fileHandler, $fileHandlerOrigin = null, array $config = null)
     {
         $this->processor = $processor;
         $this->fileHandler = $this->fileHandlerOrigin = $fileHandler;
+
         if ($fileHandlerOrigin) {
             $this->fileHandlerOrigin = $fileHandlerOrigin;
+        }
+
+        if ($config && is_array($config)) {
+            $this->config = array_merge($this->config, $config);
         }
     }
 
@@ -78,9 +89,9 @@ class ImageService
     /**
      * Fetch a resized image from the storage, when it not exists generate the resized one
      *
-     * @param string  $filename Image filename
-     * @param integer $width    Resized image width
-     * @param integer $height   Resized image height
+     * @param string  $filename   Image filename
+     * @param integer $width      Resized image width
+     * @param integer $height     Resized image height
      * @param string  $resizeType Type of resizing (resize, crop)
      *
      * @throws ImageException
@@ -95,7 +106,14 @@ class ImageService
             );
         }
 
-        // @todo Add Maximum size checks
+        // Maximum size checks
+        if ($this->config['maxWidth'] > 0 && $width > $this->config['maxWidth']) {
+            $width = $this->config['maxWidth'];
+        }
+
+        if ($this->config['maxHeight'] > 0 && $height > $this->config['maxHeight']) {
+            $height = $this->config['maxHeight'];
+        }
 
         // Get the filename of the resized image
         $resizedFilename = $this->getResizedFilename($filename, $width, $height, $resizeType);
@@ -120,6 +138,12 @@ class ImageService
             case 'resize':
                 // Resize with aspect ratio
                 $image = $this->processor->resize($file, $width, $height, true);
+
+                break;
+
+            case 'crop':
+                // Resize and crop to desired size
+                $image = $this->processor->crop($file, $width, $height);
 
                 break;
 
